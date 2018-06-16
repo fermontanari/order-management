@@ -1,0 +1,574 @@
+{
+	"info": {
+		"_postman_id": "f5c6dafa-d12e-417c-9831-faae9ac1054b",
+		"name": "Order Management - Telecom",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Shopkeeper - Create new order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);",
+							"postman.setEnvironmentVariable(\"orderId\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"1234\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"12345\",\n      \"quantity\":\"3\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/order",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement- Create proposal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"proposalId\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"price\": \"12.50\",\n  \"deliveryDate\": \"12/07/2017\",\n  \"orderRef\" : \"{{orderRef}}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:13080/wholesaler/v1/orchestration/proposal/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"wholesaler",
+						"v1",
+						"orchestration",
+						"proposal",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shopkeeper - Accept Proposal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);",
+							"tests[\"Proposal should be in Accepted state.\"] = \"Accepted\" === jsonData.status;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/proposal/{{proposalId}}/accept",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"proposal",
+						"{{proposalId}}",
+						"accept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Manufactoring Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Order should be in manufactoring state.\"] = \"Manufactoring\" === jsonData.status;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:13080/ordermanagement/v1/orchestration/order/{{orderId}}/manufactoring",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"order",
+						"{{orderId}}",
+						"manufactoring"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Dispatch Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Order should be in Dispatched state.\"] = \"Dispatched\" === jsonData.status;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:13080/ordermanagement/v1/orchestration/order/{{orderId}}/dispatch",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"order",
+						"{{orderId}}",
+						"dispatch"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Close Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Order should be in Closed state.\"] = \"Closed\" === jsonData.status;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:13080/ordermanagement/v1/orchestration/order/{{orderId}}/close",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"order",
+						"{{orderId}}",
+						"close"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shopkeeper - Read all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"1234\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"12345\",\n      \"quantity\":\"3\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Read all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"1234\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"12345\",\n      \"quantity\":\"3\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:13080/ordermanagement/v1/orchestration/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shopkeeper - Create new order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);",
+							"postman.setEnvironmentVariable(\"orderId\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123456\",\n      \"quantity\":\"1\"\n    },\n    {\n      \"productCode\": \"1234567\",\n      \"quantity\":\"1\"\n    },\n    {\n      \"productCode\": \"12345678\",\n      \"quantity\":\"1\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/order",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Create proposal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"proposalId\", jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"price\": \"239.80\",\n  \"deliveryDate\": \"22/07/2017\",\n  \"orderRef\" : \"{{orderRef}}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:13080/ordermanagement/v1/orchestration/proposal/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"proposal",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shopkeeper - Reject Proposal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);",
+							"tests[\"Proposal should be in Rejected state.\"] = \"Rejected\" === jsonData.status;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/proposal/{{proposalId}}/reject",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"proposal",
+						"{{proposalId}}",
+						"reject"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shopkeeper - Read all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"1234\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"12345\",\n      \"quantity\":\"3\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:8090/shopkeeper/v1/orchestration/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"shopkeeper",
+						"v1",
+						"orchestration",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ordermanagement - Read all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"orderRef\", \"/orchestration/order/\" + jsonData.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\":[\n    {\n      \"productCode\": \"123\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"1234\",\n      \"quantity\":\"2\"\n    },\n    {\n      \"productCode\": \"12345\",\n      \"quantity\":\"3\"\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "localhost:13080/ordermanagement/v1/orchestration/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "13080",
+					"path": [
+						"ordermanagement",
+						"v1",
+						"orchestration",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

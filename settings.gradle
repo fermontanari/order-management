@@ -1,0 +1,4 @@
+rootProject.name = 'order-management'
+
+include 'shopkeeper'
+include 'order-management-app'
